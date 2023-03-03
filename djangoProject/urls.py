@@ -22,7 +22,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("app01.urls")),  # 很重要，include里面必须是string
+    path("", include("app01.urls")),  # note that include only take in strings.
 ]
 
 
