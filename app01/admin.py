@@ -12,3 +12,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserProfileAdmin)
+
+
+# By defining this class and registering it with the Django admin site,
+# you can customize how the user profile model is displayed and edited in the Django admin interface.
