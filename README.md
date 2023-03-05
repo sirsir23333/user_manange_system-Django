@@ -18,7 +18,10 @@ All the requirement in the task for back end have been done. I used class base v
 
 To summarize, the subtask A is done by 1,2,3,4. Subtask B, C is done by 5. Subtask D is done by 7.
 
-More explanation about the code have been written as comments next to the code.
+More explanation about the code have been written as comments in the code.
 
 Thank you so much.
-Zhang siwei.
+
+Contact Info :
+  Email: a269570234@gmail.com
+  Telegram: sirsir233
