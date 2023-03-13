@@ -44,9 +44,11 @@ to staff user. Notice that even though we customize User Model, we do not need t
 it is define in other method. Same as for password, we also need not to define for the same reason.
 '''
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     # Abstractbaseuser has password, last_login, is_active by default
     email = models.EmailField(db_index=True, unique=True, max_length=254)
+    # db_index=True: This indicates that the email field should be indexed in the database to improve performance when querying by email.
     role_choices = [
         ('ADMIN', 'Admin'),
         ('MEMBER', 'Member'),
@@ -72,8 +74,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'   # instead of username being the login field, we use email
+    USERNAME_FIELD = 'email'  # instead of username being the login field, we use email
     REQUIRED_FIELDS = ['firstName', 'lastName', 'role', 'company', 'designation']
+    # what needs to be input when register, some can leave blank as set above
 
     class Meta:
         verbose_name = 'User'
