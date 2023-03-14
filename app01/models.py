@@ -20,7 +20,8 @@ class CustomUserManager(BaseUserManager):
             **extra_fields
         )
 
-        user.set_password(password)  # ensure that the password is hashed
+        user.set_password(password)
+        # ensure that the password is hashed, it is called when the user register. Called by serializer.save() in view.
         user.save(using=self._db)
         return user
 
@@ -71,6 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             self.is_staff = False
         super().save(*args, **kwargs)
+        # to ensure the parent class AbstractBaseUser's is also called
 
     objects = CustomUserManager()
 

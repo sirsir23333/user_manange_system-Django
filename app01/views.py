@@ -14,7 +14,6 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from datetime import datetime, timedelta
 
-
 # Create your views here.
 
 '''UserView is for user/, specifically for login and register. Since we are using restful api,
@@ -49,7 +48,7 @@ class UserView(APIView):
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
                 }
-                request.session['email'] = email
+                request.session['email'] = email  # For user/1/ to retrieve, update, delete data.
                 return Response({'email': user.email, 'token': token})
             else:
                 return Response({'success': False, 'message': 'Invalid credentials'})
@@ -58,6 +57,7 @@ class UserView(APIView):
             serializer = UserSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
+                # the create method in user.object is called, hence password is hashed.
                 return Response({"login_url": "/user/?action=login"}, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -75,7 +75,10 @@ class SingleUserView(APIView):
 
     def get(self, request):
         email = request.session.get("email")
+        #  or we can use request.user.get(email=email)
         user = User.objects.get(email=email)
+        # objects is defined in User(both customized or default), one of the parent-
+        # -class of it is QuerySet, which have get method. Help us to get the user from our database.
         serializer = UserSerializer(user)
         return JsonResponse(serializer.data)
 
@@ -85,6 +88,8 @@ class SingleUserView(APIView):
         serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            # When you call serializer.save(), it will ultimately call the save() method of the associated model instance
+            # That's why we override the save() in User().
             return Response({'success': True, 'method': 'put'})
         else:
             return Response({'success': False, 'message': serializer.errors})
@@ -101,9 +106,11 @@ permission at the very top, just that for this time we add a IsAdminUser in perm
 or superuser. In our case, all the ADMIN role are staff and there is only one superuser which is me :)
  I also add a GetUser method since it is use quite a couple of times(and to make the code look nicer)'''
 
+
 class AdminUserView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]
+#  APIView provides a permission_classes attribute that can be used to specify which authentication classes should be used to authenticate requests to the view.
     def GetUser(self, request):
         email = request.data.get("email")
         user = User.objects.get(email=email)
@@ -114,7 +121,6 @@ class AdminUserView(APIView):
 
         serializer = UserSerializer(user)
         return Response(serializer.data)
-
 
     def put(self, request):
         user = self.GetUser(request)
@@ -127,4 +133,4 @@ class AdminUserView(APIView):
     def delete(self, request):
         user = self.GetUser(request)
         user.delete()
-        return Response({'success': True, 'method': 'delete'},status=status.HTTP_204_NO_CONTENT)
+        return Response({'success': True, 'method': 'delete'}, status=status.HTTP_204_NO_CONTENT)

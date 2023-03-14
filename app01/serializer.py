@@ -12,7 +12,8 @@ class UserSerializer(serializers.ModelSerializer):  # for Serializing when passi
         model = User
         fields = ['id', 'email', 'role', 'firstName', 'lastName', 'company', 'designation', 'password']
 
-    def create(self, validated_data):  # ensure that the password is hashed
+    def create(self, validated_data):
+        # ensure that the password is hashed, but i never use it since I already hashed password in User.
         validated_data['password'] = make_password(validated_data.get('password'))
         return super(UserSerializer, self).create(validated_data)
 #
