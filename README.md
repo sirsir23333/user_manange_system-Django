@@ -1,4 +1,4 @@
-# app01_wavescan
+# Backend Management system
 Used Django and Django Restful API framework to built a project.
 I used class base view instead of function base view as it is more suitable for DRF.
 
